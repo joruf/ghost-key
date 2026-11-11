@@ -52,11 +52,16 @@ from pathlib import Path
 from threading import Event, Thread
 from typing import Optional, List, Tuple
 
+import exe_support
+
 
 # ------------------------ Dependency management ------------------------------
 
 def _pip_install(pkg: str) -> bool:
     """Try to install a PyPI package using pip. Returns True if success."""
+    if exe_support.IS_FROZEN:
+        # In the single-file executable sys.executable is the program itself, not python.
+        return False
     try:
         cmd = [sys.executable, "-m", "pip", "install", "--upgrade", pkg]
         res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -81,6 +86,9 @@ def _try_install_tkinter() -> bool:
     """
     if _try_import("tkinter") is not None:
         return True
+
+    if exe_support.IS_FROZEN:
+        return False
 
     # Try system package managers (Linux) if root
     try:
@@ -749,6 +757,13 @@ def _build_argparser():
 
 def main():
     """Entry point for the command-line interface."""
+    if "--version" in sys.argv[1:]:
+        import version
+
+        print(version.banner("Ghost Key"))
+        return
+
+    exe_support.use_system_environment_for_children()
     args = _build_argparser().parse_args()
 
     if args.cmd == "record":

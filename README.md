@@ -107,3 +107,18 @@ cd ghost-key
 chmod +x ghostkey.py
 ./ghostkey.py
 
+
+## Executable
+
+A single-file Linux executable (x86_64, built on Ubuntu 22.04, runs on the same or a newer glibc) is published on the [Releases page](https://github.com/joruf/ghost-key/releases). Download `ghost-key-linux-x86_64-<version>-build<build>`, make it executable (`chmod +x`) and start it. `--version` prints its version.
+
+It is a command-line tool: run it in a terminal, for example `./ghost-key-linux-x86_64-<version>-build<build> record macro.json`. `pynput`, `python-xlib` and Tk are inside the file, and nothing is installed at run time. An X11 session is required.
+
+Build it yourself from a full clone (the version is counted from the commit history):
+
+```bash
+sudo apt install python3-venv python3-tk python3-dev
+./build-exe.py            # --clean rebuilds the build environment, --keep-env reuses it
+```
+
+The result is `dist/ghost-key-linux-x86_64-<version>-build<build>`. The GitHub Actions workflow `release-exe.yml` does the same on every push to `main` and publishes the file as the release `v<version>-build<build>`.

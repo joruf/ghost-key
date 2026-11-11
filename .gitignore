@@ -1,0 +1,8 @@
+__pycache__/
+.venv/
+
+# Single-file executable: build environment and result of build-exe.py
+/build/
+/dist/
+# Version derived from the history by version.py, never checked in
+/VERSION
